@@ -1,0 +1,27 @@
+{
+  "name": "ftp-google-apps-scripts",
+  "version": "0.9.0",
+  "description": "Component for race results display",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/federacao-triatloe/ftp-google-apps-scripts.git"
+  },
+  "author": "Ricardo do Canto",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/federacao-triatlo/ftp-google-apps-scripts/issues"
+  },
+  "homepage": "https://github.com/federacao-triatlo/ftp-google-apps-scripts",
+  "devDependencies": {
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-lit": "^1.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-wc": "^1.3.2",
+    "prettier": "^2.7.1"
+  },
+  "dependencies": {}
+}
