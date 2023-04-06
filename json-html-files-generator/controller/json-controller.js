@@ -23,13 +23,14 @@
  */
 
 /**
- * Adds a custom menu to the Google Sheets file
+ * Saves a JSON file, in the user's Google Drive root folder, with the event's list of the year (season) specified
+ * on the main sheet of the spreadsheet.
  */
-function onOpen() {
-  const ui = SpreadsheetApp.getUi();
-  ui.createMenu('Gerar Ficheiros')
-    .addItem('JSON : Lista de Eventos do Ano', 'saveEventsListJsonFile')
-    .addItem('HTML : Lista de ficheiros de resultados', 'saveEventResultsFilesListHtmlFile')
-    .addItem('HTML : Tabela de resultados', 'saveResultsTableHtmlFile')
-    .addToUi();
+function saveEventsListJsonFile() {
+  const databaseSheetId = SpreadsheetApp.getActive().getRangeByName('CellDataBaseSheetId').getDisplayValues()[0][0];
+
+  const eventsJsonString = createEventsJsonByDatabaseSheetId(databaseSheetId);
+  const fileName = 'events.json';
+
+  DriveApp.createFile(fileName, eventsJsonString);
 }

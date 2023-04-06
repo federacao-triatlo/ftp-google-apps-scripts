@@ -23,13 +23,8 @@
  */
 
 /**
- * Adds a custom menu to the Google Sheets file
+ * Creates a JSON string with the event's list of the season (year) specified on the main sheet of the spreadsheet.
  */
-function onOpen() {
-  const ui = SpreadsheetApp.getUi();
-  ui.createMenu('Gerar Ficheiros')
-    .addItem('JSON : Lista de Eventos do Ano', 'saveEventsListJsonFile')
-    .addItem('HTML : Lista de ficheiros de resultados', 'saveEventResultsFilesListHtmlFile')
-    .addItem('HTML : Tabela de resultados', 'saveResultsTableHtmlFile')
-    .addToUi();
+function createEventsJsonByDatabaseSheetId(databaseSheetId) {
+  return JSON.stringify(getEventsByDataBaseSheetId(databaseSheetId));
 }

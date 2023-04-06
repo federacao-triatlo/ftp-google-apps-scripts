@@ -23,13 +23,29 @@
  */
 
 /**
- * Adds a custom menu to the Google Sheets file
+ * Gets the events list stored in the Google Sheets file with in the given ID.
+ *
+ * @param databaseSheetId the Google Sheet ID of the file of the event's database
  */
-function onOpen() {
-  const ui = SpreadsheetApp.getUi();
-  ui.createMenu('Gerar Ficheiros')
-    .addItem('JSON : Lista de Eventos do Ano', 'saveEventsListJsonFile')
-    .addItem('HTML : Lista de ficheiros de resultados', 'saveEventResultsFilesListHtmlFile')
-    .addItem('HTML : Tabela de resultados', 'saveResultsTableHtmlFile')
-    .addToUi();
+function getEventsByDataBaseSheetId(databaseSheetId) {
+  const tableEvents = SpreadsheetApp.openById(databaseSheetId).getRangeByName('TableEvent').getDisplayValues();
+  const eventObjectKeys = tableEvents.shift();
+
+  const returnedFields = ['id', 'eventReference', 'title', 'startDate', 'endDate', 'city', 'county', 'district'];
+
+  const events = [];
+  tableEvents.map((eventRow) => {
+    if (eventRow[0]) {
+      const eventObject = {};
+      eventObjectKeys.map((key, columnIndex) => {
+        if (returnedFields.includes(key)) {
+          eventObject[key] = eventRow[columnIndex];
+        }
+      });
+
+      events.push(eventObject);
+    }
+  });
+
+  return events;
 }
