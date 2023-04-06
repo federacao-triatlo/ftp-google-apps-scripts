@@ -23,12 +23,26 @@
  */
 
 /**
- * Adds a custom menu to the Google Sheets file
+ * Gets the race results stored in the given range name of the Google Sheets file with the given ID.
+ *
+ * @param resultsSheetId the Google Sheets ID where the race results are stored
+ * @param resultsRangeName the Google Sheets range name of the desired race results
  */
-function onOpen() {
-  const ui = SpreadsheetApp.getUi();
-  ui.createMenu('Gerar Ficheiros')
-    .addItem('HTML : Lista de ficheiros de resultados', 'saveEventResultsFilesListHtmlFile')
-    .addItem('HTML : Tabela de resultados', 'saveResultsTableHtmlFile')
-    .addToUi();
+function getResultsByRangeName(resultsSheetId, resultsRangeName) {
+  const tableResults = SpreadsheetApp.openById(resultsSheetId).getRangeByName(resultsRangeName).getDisplayValues();
+  const resultsObjectKeys = tableResults.shift();
+
+  const results = [];
+  tableResults.map((row) => {
+    if (row[0]) {
+      const resultsRow = {};
+      resultsObjectKeys.map((key, rowIndex) => {
+        resultsRow[key] = row[rowIndex];
+      });
+
+      results.push(resultsRow);
+    }
+  });
+
+  return results;
 }

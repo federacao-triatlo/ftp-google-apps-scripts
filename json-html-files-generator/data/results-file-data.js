@@ -23,12 +23,28 @@
  */
 
 /**
- * Adds a custom menu to the Google Sheets file
+ * Gets the results file list of the given event ID stored in the Google Sheets file with the given ID.
+ *
+ * @param dataBaseSheetId the Google Sheet ID of the file of the event's database
+ * @param eventId the event ID
  */
-function onOpen() {
-  const ui = SpreadsheetApp.getUi();
-  ui.createMenu('Gerar Ficheiros')
-    .addItem('HTML : Lista de ficheiros de resultados', 'saveEventResultsFilesListHtmlFile')
-    .addItem('HTML : Tabela de resultados', 'saveResultsTableHtmlFile')
-    .addToUi();
+function getResultsFilesByEventId(dataBaseSheetId, eventId) {
+  const tableResultsFile = SpreadsheetApp.openById(dataBaseSheetId)
+    .getRangeByName('TableResultsFile')
+    .getDisplayValues();
+  const resultsFileObjectKeys = tableResultsFile.shift();
+
+  const resultsFiles = [];
+  tableResultsFile.map((row) => {
+    if (row[0] && row[1] == eventId) {
+      const resultsFileObject = {};
+      resultsFileObjectKeys.map((key, rowIndex) => {
+        resultsFileObject[key] = row[rowIndex];
+      });
+
+      resultsFiles.push(resultsFileObject);
+    }
+  });
+
+  return resultsFiles;
 }

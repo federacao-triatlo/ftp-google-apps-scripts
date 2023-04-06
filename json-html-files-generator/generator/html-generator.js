@@ -28,8 +28,9 @@
  */
 function createEventFilesListHtmlFile() {
   const dataBaseSheetId = SpreadsheetApp.getActive().getRangeByName('CellDataBaseSheetId').getDisplayValues()[0][0];
-  const eventYear = SpreadsheetApp.getActive().getRangeByName('CellEventYear').getDisplayValues()[0][0];
   const eventId = SpreadsheetApp.getActive().getRangeByName('CellEventId').getDisplayValues()[0][0];
+
+  const eventYear = SpreadsheetApp.getActive().getRangeByName('CellEventYear').getDisplayValues()[0][0];
   const eventReference = SpreadsheetApp.getActive().getRangeByName('CellEventReference').getDisplayValues()[0][0];
 
   const resultsFiles = getResultsFilesByEventId(dataBaseSheetId, eventId);

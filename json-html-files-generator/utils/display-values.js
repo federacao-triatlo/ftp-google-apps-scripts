@@ -22,6 +22,11 @@
  * SOFTWARE.
  */
 
+/**
+ * Returns the translation of the given value
+ *
+ * @param originalValue the value to be translated
+ */
 function getDisplayValue(originalValue) {
   const ptLabels = {
     athleteID: 'ID do Atleta',
