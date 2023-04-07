@@ -23,28 +23,32 @@
  */
 
 /**
- * Gets the events list stored in the Google Sheets file with in the given ID.
+ * Gets the events list stored in the Google Sheets file with the given ID.
  *
- * @param databaseSheetId the Google Sheet ID of the file of the event's database
+ * @param databaseSheetId the Google Sheets file ID where the Event table is stored
+ * @returns the list of events stored in the Google Sheets file with the given ID
  */
-function getEventsByDataBaseSheetId(databaseSheetId) {
-  const tableEvents = SpreadsheetApp.openById(databaseSheetId).getRangeByName('TableEvent').getDisplayValues();
-  const eventObjectKeys = tableEvents.shift();
+function getEventsByDatabaseSheetId(databaseSheetId) {
+  const tableEvent = SpreadsheetApp.openById(databaseSheetId)
+    .getRangeByName('TableEvent')
+    .getDisplayValues()
+    .filter((record) => {
+      return record[0];
+    });
+  const tableEventFields = tableEvent.shift();
 
   const returnedFields = ['id', 'eventReference', 'title', 'startDate', 'endDate', 'city', 'county', 'district'];
 
   const events = [];
-  tableEvents.map((eventRow) => {
-    if (eventRow[0]) {
-      const eventObject = {};
-      eventObjectKeys.map((key, columnIndex) => {
-        if (returnedFields.includes(key)) {
-          eventObject[key] = eventRow[columnIndex];
-        }
-      });
+  tableEvent.map((tableEventRecord) => {
+    const event = {};
+    tableEventFields.map((key, columnIndex) => {
+      if (returnedFields.includes(key)) {
+        event[key] = tableEventRecord[columnIndex];
+      }
+    });
 
-      events.push(eventObject);
-    }
+    events.push(event);
   });
 
   return events;

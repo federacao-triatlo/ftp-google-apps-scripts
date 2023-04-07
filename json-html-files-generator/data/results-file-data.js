@@ -25,24 +25,28 @@
 /**
  * Gets the results file list of the given event ID stored in the Google Sheets file with the given ID.
  *
- * @param dataBaseSheetId the Google Sheet ID of the file of the event's database
- * @param eventId the event ID
+ * @param dataBaseSheetId the ID of the Google Sheets file where the ResultsFiles table is stored
+ * @param eventId the given event ID
+ * @returns the list of results files of the given event
  */
 function getResultsFilesByEventId(dataBaseSheetId, eventId) {
   const tableResultsFile = SpreadsheetApp.openById(dataBaseSheetId)
     .getRangeByName('TableResultsFile')
-    .getDisplayValues();
-  const resultsFileObjectKeys = tableResultsFile.shift();
+    .getDisplayValues()
+    .filter((record) => {
+      return record[0];
+    });
+  const tableResultsFileFields = tableResultsFile.shift();
 
   const resultsFiles = [];
-  tableResultsFile.map((row) => {
-    if (row[0] && row[1] == eventId) {
-      const resultsFileObject = {};
-      resultsFileObjectKeys.map((key, rowIndex) => {
-        resultsFileObject[key] = row[rowIndex];
+  tableResultsFile.map((tableResultsFileRecord) => {
+    if (tableResultsFileRecord[1] == eventId) {
+      const resultsFile = {};
+      tableResultsFileFields.map((key, columnIndex) => {
+        resultsFile[key] = tableResultsFileRecord[columnIndex];
       });
 
-      resultsFiles.push(resultsFileObject);
+      resultsFiles.push(resultsFile);
     }
   });
 

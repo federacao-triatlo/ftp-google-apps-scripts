@@ -23,67 +23,26 @@
  */
 
 /**
- * Saves a file, in the user's Google Drive root folder with the HTML code that lists
- * all the results files of the Event specified on the main sheet of this spreadsheet.
+ * Creates a string with the HTML code to display the results files list of the Event that took place in the given year,
+ * stored in the Google Sheets file with the given ID, that has the given event ID and the given event reference.
+ *
+ * @param eventYear the event's year
+ * @param databaseSheetId the Google Sheets file ID where the Event table is stored
+ * @param eventId the event's ID
+ * @param eventReference the event's reference
+ * @returns the string with the HTML code to display the results files list of the required Event
  */
-function createEventFilesListHtmlFile() {
-  const dataBaseSheetId = SpreadsheetApp.getActive().getRangeByName('CellDataBaseSheetId').getDisplayValues()[0][0];
-  const eventId = SpreadsheetApp.getActive().getRangeByName('CellEventId').getDisplayValues()[0][0];
-
-  const eventYear = SpreadsheetApp.getActive().getRangeByName('CellEventYear').getDisplayValues()[0][0];
-  const eventReference = SpreadsheetApp.getActive().getRangeByName('CellEventReference').getDisplayValues()[0][0];
-
-  const resultsFiles = getResultsFilesByEventId(dataBaseSheetId, eventId);
+function createEventFilesListHtml(eventYear, databaseSheetId, eventId, eventReference) {
+  const resultsFiles = getResultsFilesByEventId(databaseSheetId, eventId);
   resultsFiles.sort((fileA, fileB) => {
     return fileA.displayOrder - fileB.displayOrder;
   });
 
-  const html = createEventFilesListHtml(eventYear, eventReference, resultsFiles);
-
-  const fileName = eventReference + '.html';
-  DriveApp.createFile(fileName, html, MimeType.HTML);
-}
-
-/**
- * Gets the Results Files by Event ID.
- *
- * @param dataBaseSheetId the Google Sheet ID of the file of the event's database
- * @param eventId the event ID
- */
-function getResultsFilesByEventId(dataBaseSheetId, eventId) {
-  const tableResultsFile = SpreadsheetApp.openById(dataBaseSheetId)
-    .getRangeByName('TableResultsFile')
-    .getDisplayValues();
-  const resultsFileObjectKeys = tableResultsFile.shift();
-
-  const resultsFiles = [];
-  tableResultsFile.map((row) => {
-    if (row[0] && row[1] == eventId) {
-      const resultsFileObject = {};
-      resultsFileObjectKeys.map((key, rowIndex) => {
-        resultsFileObject[key] = row[rowIndex];
-      });
-
-      resultsFiles.push(resultsFileObject);
-    }
-  });
-
-  return resultsFiles;
-}
-
-/**
- * Creates the HTML code for the Event's files list
- *
- * @param eventYear the event's year
- * @param eventReference the event's reference
- * @param resultsFiles the results file list
- */
-function createEventFilesListHtml(eventYear, eventReference, resultsFiles) {
   const fileBaseUrl = 'https://api-files.federacao-triatlo.pt/' + eventYear + '/events/' + eventReference + '/';
 
   let html = '<race-results event-reference="' + eventReference + '"></race-results>' + '\n';
   html = html + '<div class="results-files">' + '\n';
-  html = html + '\x20\x20' + '<h2 class="results-files__header">Ficheiros</h2>' + '\n';
+  html = html + '\t' + '<h2 class="results-files__header">Ficheiros</h2>' + '\n';
 
   resultsFiles.forEach((file) => {
     const linkTextPrefix =
@@ -94,13 +53,89 @@ function createEventFilesListHtml(eventYear, eventReference, resultsFiles) {
       const hrefValue = fileBaseUrl + file.fileName;
       const linkText = file.title + ' - ' + file.subtitle;
 
-      html = html + '\x20\x20' + '<div class="results-files__item">' + '\n';
-      html = html + '\x20\x20\x20\x20' + '<a href="' + hrefValue + linkTextPrefix + linkText + linkTextSufix + '\n';
-      html = html + '\x20\x20' + '</div>' + '\n';
+      html = html + '\t' + '<div class="results-files__item">' + '\n';
+      html = html + '\t\t' + '<a href="' + hrefValue + linkTextPrefix + linkText + linkTextSufix + '\n';
+      html = html + '\t' + '</div>' + '\n';
     }
   });
 
   html = html + '</div>' + '\n';
+
+  return html.replace(/\t/gi, '\x20\x20');
+}
+
+/**
+ * Creates a string with the HTML code to display the race results stored in the file with the given range name that
+ * are stored in the Google Sheets file with the given ID.
+ *
+ * @param resultsSheetId the Google Sheets file ID where the results are stored
+ * @param resultsRangeName the name of the range that contains the required results
+ * @returns the string with the HTML code to display the required race results
+ */
+function createResultsTableHtml(resultsSheetId, resultsRangeName) {
+  const results = getResultsByRangeName(resultsSheetId, resultsRangeName);
+
+  let html = '<div class="table-container">' + '\n';
+  html += '\t' + '<table class="table is-striped is-narrow is-hoverable table is-fullwidth">' + '\n';
+  html += createTableHeadHtml(results);
+  html += createTableBodyHtml(results);
+  html += '\t' + '</table>' + '\n';
+  html += '</div>' + '\n';
+
+  return html.replace(/\t/gi, '\x20\x20');
+}
+
+/**
+ * Creates the HTML code of the table's head to display the given data.
+ *
+ * @param data the data to be displayed in the table
+ * @returns the string with the HTML code of the table's head that displays the given data
+ */
+function createTableHeadHtml(data) {
+  const resultsKeys = Object.keys(data[0]);
+  const tableLabels = resultsKeys.filter((element) => {
+    return element !== 'athleteID';
+  });
+
+  tableLabels.forEach((label, index, tableLabels) => {
+    tableLabels[index] = getDisplayValue(label);
+  });
+
+  let html = '\t\t' + '<thead>' + '\n';
+  html += '\t\t\t' + '<tr>' + '\n';
+
+  tableLabels.forEach((label) => {
+    html += '\t\t\t\t' + '<th>' + label + '</th>' + '\n';
+  });
+
+  html += '\t\t\t' + '</tr>' + '\n';
+  html += '\t\t' + '</thead>' + '\n';
+
+  return html;
+}
+
+/**
+ * Creates the HTML code of the table's body to display the given data.
+ *
+ * @param data the data to be displayed in the table
+ * @returns the string with the HTML code of the table's body that displays the given data
+ */
+function createTableBodyHtml(data) {
+  let html = '\t\t' + '<tbody>' + '\n';
+
+  data.forEach((row) => {
+    html += '\t\t\t' + '<tr>' + '\n';
+
+    for (key in row) {
+      if (key !== 'athleteID') {
+        html += '\t\t\t' + '<td>' + row[key] + '</td>' + '\n';
+      }
+    }
+
+    html += '\t\t\t' + '</tr>' + '\n';
+  });
+
+  html += '\t\t' + '</tbody>' + '\n';
 
   return html;
 }

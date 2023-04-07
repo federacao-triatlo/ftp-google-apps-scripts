@@ -26,22 +26,26 @@
  * Gets the race results stored in the given range name of the Google Sheets file with the given ID.
  *
  * @param resultsSheetId the Google Sheets ID where the race results are stored
- * @param resultsRangeName the Google Sheets range name of the desired race results
+ * @param resultsRangeName the Google Sheets range name of the required race results
+ * @returns the results list of the race stored with the given range name of the given Google Sheets file
  */
 function getResultsByRangeName(resultsSheetId, resultsRangeName) {
-  const tableResults = SpreadsheetApp.openById(resultsSheetId).getRangeByName(resultsRangeName).getDisplayValues();
-  const resultsObjectKeys = tableResults.shift();
+  const tableResults = SpreadsheetApp.openById(resultsSheetId)
+    .getRangeByName(resultsRangeName)
+    .getDisplayValues()
+    .filter((record) => {
+      return record[0];
+    });
+  const tableResultsFields = tableResults.shift();
 
   const results = [];
-  tableResults.map((row) => {
-    if (row[0]) {
-      const resultsRow = {};
-      resultsObjectKeys.map((key, rowIndex) => {
-        resultsRow[key] = row[rowIndex];
-      });
+  tableResults.map((tableResultsRecord) => {
+    const result = {};
+    tableResultsFields.map((key, columnIndex) => {
+      result[key] = tableResultsRecord[columnIndex];
+    });
 
-      results.push(resultsRow);
-    }
+    results.push(result);
   });
 
   return results;
