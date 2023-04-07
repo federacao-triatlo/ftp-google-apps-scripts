@@ -31,3 +31,42 @@
 function createEventsJsonByDatabaseSheetId(databaseSheetId) {
   return JSON.stringify(getEventsByDatabaseSheetId(databaseSheetId));
 }
+
+/**
+ * Creates a JSON string with the event with the given event ID stored in the Google Sheets file with the given ID
+ *
+ * @param databaseSheetId the Google Sheets file ID where the Event table is stored
+ * @param eventId the ID of the required event
+ * @returns
+ */
+function createEventJsonByEventId(databaseSheetId, eventId) {
+  const event = getEventById(databaseSheetId, eventId);
+
+  let eventRaces = [];
+  event.programs.forEach((program) => {
+    program.races.forEach((race) => {
+      race.eventID = program.eventID;
+      race.sport = program.sport;
+      race.distanceType = program.distanceType;
+      race.swimDistance = program.swimDistance;
+      race.swimLaps = program.swimLaps;
+      race.firstRunDistance = program.firstRunDistance;
+      race.firstRunLaps = program.firstRunLaps;
+      race.cyclingDistance = program.cyclingDistance;
+      race.cyclingLaps = program.cyclingLaps;
+      race.runDistance = program.runDistance;
+      race.runLaps = program.runLaps;
+      race.secondRunDistance = program.secondRunDistance;
+      race.secondRunLaps = program.secondRunLaps;
+
+      delete race.programID;
+    });
+
+    eventRaces = eventRaces.concat(program.races);
+  });
+
+  delete event.programs;
+  event.races = eventRaces;
+
+  return JSON.stringify(event);
+}

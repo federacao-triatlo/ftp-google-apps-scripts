@@ -53,3 +53,25 @@ function getEventsByDatabaseSheetId(databaseSheetId) {
 
   return events;
 }
+
+/**
+ * Gets the event with a given event ID stored in the Google Sheets file with the given ID
+ *
+ * @param databaseSheetId the Google Sheets file ID where the Event table is stored
+ * @param eventId the ID of the required event
+ * @returns the event with the given event ID stored in the Google Sheets file with the given ID
+ */
+function getEventById(databaseSheetId, eventId) {
+  const event = getEventsByDatabaseSheetId(databaseSheetId)
+    .filter((element) => {
+      return element.id == eventId;
+    })
+    .shift();
+
+  event.eventFiles = getEventFilesByEventId(databaseSheetId, eventId);
+  event.organizers = getOrganizersByEventId(databaseSheetId, eventId);
+  event.programs = getProgramsByEventId(databaseSheetId, eventId);
+  event.resultsFiles = getResultsFilesByEventId(databaseSheetId, eventId);
+
+  return event;
+}

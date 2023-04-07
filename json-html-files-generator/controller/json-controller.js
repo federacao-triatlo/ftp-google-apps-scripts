@@ -34,3 +34,18 @@ function saveEventsListJsonFile() {
 
   DriveApp.createFile(fileName, eventsJsonString);
 }
+
+/**
+ * Saves a JSON file, in the user's Google Drive root folder, with the event specified on the main sheet
+ * of the spreadsheet.
+ */
+function saveEventJsonFile() {
+  const databaseSheetId = SpreadsheetApp.getActive().getRangeByName('CellDataBaseSheetId').getDisplayValues()[0][0];
+  const eventId = SpreadsheetApp.getActive().getRangeByName('CellEventId').getDisplayValues()[0][0];
+  const eventReference = SpreadsheetApp.getActive().getRangeByName('CellEventReference').getDisplayValues()[0][0];
+
+  const eventJsonString = createEventJsonByEventId(databaseSheetId, eventId);
+  const fileName = eventReference + '.json';
+
+  DriveApp.createFile(fileName, eventJsonString);
+}
