@@ -64,12 +64,28 @@ function getRacesByDatabaseSheetId(databaseSheetId) {
 /**
  * Filters the races from the given races list that have the given program ID
  *
+ * @param databaseSheetId the Google Sheets file ID where the Race table is stored
  * @param races thegivel races list to be filtered
  * @param programId the programa ID of the requeired races
  * @returns rhe list of races in the given list qith the given program ID
  */
-function getRacesByProgramId(races, programId) {
+function getRacesByProgramId(databaseSheetId, races, programId) {
+  const tableProgramRace = SpreadsheetApp.openById(databaseSheetId)
+    .getRangeByName('TableProgramRace')
+    .getDisplayValues()
+    .filter((record) => {
+      return record[0];
+    })
+    .slice(1);
+
+  const programRacesIds = [];
+  tableProgramRace.map((tableProgramRaceRecord) => {
+    if (tableProgramRaceRecord[1] == programId) {
+      programRacesIds.push(tableProgramRaceRecord[2]);
+    }
+  });
+
   return races.filter((race) => {
-    return race.programID == programId;
+    return programRacesIds.includes(race.id);
   });
 }

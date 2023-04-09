@@ -68,7 +68,7 @@ function getProgramsByEventId(databaseSheetId, eventId) {
 
   const seasonRaces = getRacesByDatabaseSheetId(databaseSheetId);
   programs.forEach((program) => {
-    program.races = getRacesByProgramId(seasonRaces, program.id);
+    program.races = getRacesByProgramId(databaseSheetId, seasonRaces, program.id);
   });
 
   return programs;

@@ -37,7 +37,7 @@ function createEventsJsonByDatabaseSheetId(databaseSheetId) {
  *
  * @param databaseSheetId the Google Sheets file ID where the Event table is stored
  * @param eventId the ID of the required event
- * @returns
+ * @returns the JSON string with the required event
  */
 function createEventJsonByEventId(databaseSheetId, eventId) {
   const event = getEventById(databaseSheetId, eventId);
@@ -65,8 +65,20 @@ function createEventJsonByEventId(databaseSheetId, eventId) {
     eventRaces = eventRaces.concat(program.races);
   });
 
+  const uniqueEventRaces = [];
+  const eventRacesIds = [];
+  eventRaces.forEach((race) => {
+    if (!eventRacesIds.includes(race.id)) {
+      eventRacesIds.push(race.id);
+      uniqueEventRaces.push(race);
+    }
+  });
+  uniqueEventRaces.sort((raceA, raceB) => {
+    return raceA.id - raceB.id;
+  });
+
   delete event.programs;
-  event.races = eventRaces;
+  event.races = uniqueEventRaces;
 
   return JSON.stringify(event);
 }
