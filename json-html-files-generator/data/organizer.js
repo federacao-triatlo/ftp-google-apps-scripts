@@ -74,7 +74,11 @@ function getOrganizersByEventId(databaseSheetId, eventId) {
     }
   });
 
-  return organizers.filter((organizer) => {
-    return eventOrganizersIds.includes(organizer.id);
-  });
+  return organizers
+    .filter((organizer) => {
+      return eventOrganizersIds.includes(organizer.id);
+    })
+    .sort((a, b) => {
+      return a.id - b.id;
+    });
 }

@@ -73,3 +73,24 @@ function getProgramsByEventId(databaseSheetId, eventId) {
 
   return programs;
 }
+
+/**
+ * Gets the list of the race IDs from the given programs list
+ *
+ * @param programs the given programs
+ * @returns the list of the given programs race's IDs
+ */
+function getRaceIdsFromPrograms(programs) {
+  const raceIds = [];
+  programs.forEach((program) => {
+    program.races.forEach((race) => {
+      if (!raceIds.includes(race.id)) {
+        raceIds.push(race.id);
+      }
+    });
+  });
+
+  return raceIds.sort((a, b) => {
+    return a - b;
+  });
+}

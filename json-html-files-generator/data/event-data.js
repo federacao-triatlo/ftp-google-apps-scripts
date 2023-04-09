@@ -71,7 +71,7 @@ function getEventById(databaseSheetId, eventId) {
   event.eventFiles = getEventFilesByEventId(databaseSheetId, eventId);
   event.organizers = getOrganizersByEventId(databaseSheetId, eventId);
   event.programs = getProgramsByEventId(databaseSheetId, eventId);
-  event.resultsFiles = getResultsFilesByEventId(databaseSheetId, eventId);
+  event.resultsFiles = getResultsFilesByRaceIds(databaseSheetId, getRaceIdsFromPrograms(event.programs));
 
   return event;
 }

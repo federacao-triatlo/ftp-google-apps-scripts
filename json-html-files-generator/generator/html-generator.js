@@ -33,7 +33,9 @@
  * @returns the string with the HTML code to display the results files list of the required Event
  */
 function createEventFilesListHtml(eventYear, databaseSheetId, eventId, eventReference) {
-  const resultsFiles = getResultsFilesByEventId(databaseSheetId, eventId);
+  const resultsFiles = getResultsFilesByEventId(databaseSheetId, eventId).filter((file) => {
+    return file.active == 'TRUE';
+  });
   resultsFiles.sort((fileA, fileB) => {
     return fileA.displayOrder - fileB.displayOrder;
   });

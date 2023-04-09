@@ -23,14 +23,13 @@
  */
 
 /**
- * Gets the results file list of the given event ID stored in the Google Sheets file with the given ID.
+ * Gets the results files stored in the Google Sheets file with the given ID
  *
- * @param dataBaseSheetId the ID of the Google Sheets file where the ResultsFiles table is stored
- * @param eventId the given event ID
- * @returns the list of results files of the given event
+ * @param databaseSheetId the Google Sheets file ID where the Race table is stored
+ * @returns the list of results files stored in the Google Sheets file with the given ID
  */
-function getResultsFilesByEventId(dataBaseSheetId, eventId) {
-  const tableResultsFile = SpreadsheetApp.openById(dataBaseSheetId)
+function getresultsFilesByDatabaseSheetId(databaseSheetId) {
+  const tableResultsFile = SpreadsheetApp.openById(databaseSheetId)
     .getRangeByName('TableResultsFile')
     .getDisplayValues()
     .filter((record) => {
@@ -39,16 +38,43 @@ function getResultsFilesByEventId(dataBaseSheetId, eventId) {
   const tableResultsFileFields = tableResultsFile.shift();
 
   const resultsFiles = [];
-  tableResultsFile.map((tableResultsFileRecord) => {
-    if (tableResultsFileRecord[1] == eventId) {
-      const resultsFile = {};
-      tableResultsFileFields.map((key, columnIndex) => {
-        resultsFile[key] = tableResultsFileRecord[columnIndex];
-      });
+  tableResultsFile.map((tableProgramRecord) => {
+    const resultsFile = {};
+    tableResultsFileFields.map((key, columnIndex) => {
+      resultsFile[key] = tableProgramRecord[columnIndex];
+    });
 
-      resultsFiles.push(resultsFile);
-    }
+    resultsFiles.push(resultsFile);
   });
 
   return resultsFiles;
+}
+
+/**
+ * Gets the results file list of the given event ID stored in the Google Sheets file with the given ID.
+ *
+ * @param databaseSheetId the ID of the Google Sheets file where the ResultsFiles table is stored
+ * @param eventId the given event ID
+ * @returns the list of results files of the given event
+ */
+function getResultsFilesByEventId(databaseSheetId, eventId) {
+  const eventPrograms = getProgramsByEventId(databaseSheetId, eventId);
+  const eventRacesIds = getRaceIdsFromPrograms(eventPrograms);
+
+  return getResultsFilesByRaceIds(databaseSheetId, eventRacesIds);
+}
+
+/**
+ * Gets the results files list of the given race IDs list stored in the Google Sheets file with the given ID.
+ *
+ * @param databaseSheetId the ID of the Google Sheets file where the ResultsFiles table is stored
+ * @param raceIds the list of races
+ * @returns the list of results files of the given races IDs
+ */
+function getResultsFilesByRaceIds(databaseSheetId, raceIds) {
+  const seasonResultsFiles = getresultsFilesByDatabaseSheetId(databaseSheetId);
+
+  return seasonResultsFiles.filter((file) => {
+    return raceIds.includes(file.raceID);
+  });
 }

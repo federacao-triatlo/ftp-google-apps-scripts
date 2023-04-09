@@ -23,10 +23,7 @@
  */
 
 /**
- * Creates a JSON string with the event's list stored in the Google Sheets file with the given ID.
- *
- * @param databaseSheetId the Google Sheets file ID where the Event table is stored
- * @returns the JSON string with the event's list stored in the Google Sheets file with the given ID
+ * Creates a JSON string with the event's list of the season (year) specified on the main sheet of the spreadsheet.
  */
 function createEventsJsonByDatabaseSheetId(databaseSheetId) {
   return JSON.stringify(getEventsByDatabaseSheetId(databaseSheetId));
@@ -79,6 +76,15 @@ function createEventJsonByEventId(databaseSheetId, eventId) {
 
   delete event.programs;
   event.races = uniqueEventRaces;
+
+  let eventResultsFiles = event.resultsFiles;
+  eventResultsFiles = eventResultsFiles.filter((file) => {
+    return file.active == 'TRUE';
+  });
+  eventResultsFiles.sort((fileA, fileB) => {
+    return fileA.displayOrder - fileB.displayOrder;
+  });
+  event.resultsFiles = eventResultsFiles;
 
   return JSON.stringify(event);
 }
