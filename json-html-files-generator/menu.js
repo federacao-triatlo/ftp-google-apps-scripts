@@ -29,6 +29,7 @@ function onOpen() {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu('Gerar Ficheiros')
     .addItem('JSON : Lista de Eventos do Ano', 'saveEventsListJsonFile')
+    .addItem('JSON : Evento', 'saveEventJsonFile')
     .addItem('HTML : Lista de ficheiros de resultados', 'saveEventResultsFilesListHtmlFile')
     .addItem('HTML : Tabela de resultados', 'saveResultsTableHtmlFile')
     .addToUi();
