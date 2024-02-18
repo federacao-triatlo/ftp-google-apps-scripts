@@ -54,3 +54,16 @@ function saveResultsTableHtmlFile() {
 
   DriveApp.createFile(fileName, html, MimeType.HTML);
 }
+
+/**
+ * Saves a file, in the user's Google Drive root folder, with the HTML code that displays the live results of the
+ * Event specified on the main sheet of the spreadsheet and using the data stored on TableLiveResults range.
+ */
+function saveLiveResultsHtmlFile() {
+  const eventReference = SpreadsheetApp.getActive().getRangeByName('ValueEventReference').getDisplayValues()[0][0];
+
+  const html = createLiveResultsHtml();
+  const fileName = eventReference + '.html';
+
+  DriveApp.createFile(fileName, html, MimeType.HTML);
+}

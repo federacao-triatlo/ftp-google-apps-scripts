@@ -23,15 +23,26 @@
  */
 
 /**
- * Adds a custom menu to the Google Sheets file
+ * Gets the data of the live results races
+ *
+ * @returns the data of the live results races
  */
-function onOpen() {
-  const ui = SpreadsheetApp.getUi();
-  ui.createMenu('Gerar Ficheiros')
-    .addItem('JSON : Lista de Eventos do Ano', 'saveEventsListJsonFile')
-    .addItem('JSON : Evento', 'saveEventJsonFile')
-    .addItem('HTML : Lista de ficheiros de resultados', 'saveEventResultsFilesListHtmlFile')
-    .addItem('HTML : Tabela de resultados', 'saveResultsTableHtmlFile')
-    .addItem('HTML : Live Results', 'saveLiveResultsHtmlFile')
-    .addToUi();
+function getLiveRaces() {
+  const tableLiveResultsData = SpreadsheetApp.getActive()
+    .getRangeByName('TableLiveResults')
+    .getDisplayValues()
+    .filter((record) => {
+      return record[0];
+    });
+  const liveResultsDataFields = tableLiveResultsData.shift();
+
+  const liveRaces = [];
+  tableLiveResultsData.map((tableLliveResultsRecord) => {
+    liveRace = {};
+    liveRace['label'] = tableLliveResultsRecord[0];
+    liveRace['title'] = tableLliveResultsRecord[1];
+    liveRaces.push(liveRace);
+  });
+
+  return liveRaces;
 }
