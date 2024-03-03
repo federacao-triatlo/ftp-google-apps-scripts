@@ -67,3 +67,19 @@ function saveLiveResultsHtmlFile() {
 
   DriveApp.createFile(fileName, html, MimeType.HTML);
 }
+
+/**
+ * Saves a file, in the user's Google Drive root folder, with the HTML code that lists the required files and links
+ * on the EventON page of the Event specified on the main sheet of the spreadsheet.
+ */
+function saveEventOnResourcesListHtmlFile() {
+  const eventYear = SpreadsheetApp.getActive().getRangeByName('ValueEventYear').getDisplayValues()[0][0];
+  const databaseSheetId = SpreadsheetApp.getActive().getRangeByName('ValueDataBaseSheetId').getDisplayValues()[0][0];
+  const eventId = SpreadsheetApp.getActive().getRangeByName('ValueEventId').getDisplayValues()[0][0];
+  const eventReference = SpreadsheetApp.getActive().getRangeByName('ValueEventReference').getDisplayValues()[0][0];
+
+  const html = createEventOnResourcesListHtml(eventYear, databaseSheetId, eventId, eventReference);
+  const fileName = eventReference + '-EventON.html';
+
+  DriveApp.createFile(fileName, html, MimeType.HTML);
+}

@@ -1,0 +1,90 @@
+/*
+ * MIT License
+ *
+ * Copyright(c) 2023 Ricardo do Canto
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files(the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+const FILES_API_BASE_URL = 'https://api-files.federacao-triatlo.pt/';
+
+/**
+ * Gets the data of the EventON files list
+ *
+ * @param eventYear the event's year
+ * @param databaseSheetId the Google Sheets file ID where the Event table is stored
+ * @param eventId the event's ID
+ * @param eventReference the event's reference
+ *
+ * @returns the data of the EventON files list
+ */
+function getEventEventOnData(eventYear, databaseSheetId, eventId, eventReference) {
+  const tableEventFile = SpreadsheetApp.openById(databaseSheetId)
+    .getRangeByName('TableEventFile')
+    .getDisplayValues()
+    .filter((record) => {
+      return record[0];
+    });
+  tableEventFile.shift();
+
+  const filteredTableEventFile = tableEventFile.filter((record) => {
+    return record[1] === eventId && record[4] === 'TRUE' && record[6] !== 'POSTER' && record[6] !== 'COVER_IMAGE';
+  });
+
+  let eventResources = [];
+  filteredTableEventFile.forEach((record) => {
+    const eventResource = {};
+    eventResource.linkType = record[6];
+    eventResource.linkLabel = record[2];
+    eventResource.linkUrl = FILES_API_BASE_URL + eventYear + '/events/' + eventReference + '/' + record[5];
+
+    eventResources.push(eventResource);
+  });
+
+  const startLists = eventResources.filter((eventResource) => {
+    return eventResource.linkType === 'START_LIST';
+  });
+
+  eventResources = eventResources.filter((eventResource) => {
+    return eventResource.linkType !== 'START_LIST';
+  });
+
+  const tableEventOn = SpreadsheetApp.getActive()
+    .getRangeByName('TableEventOn')
+    .getDisplayValues()
+    .filter((record) => {
+      return record[0];
+    });
+  const eventOnFields = tableEventOn.shift();
+
+  tableEventOn.forEach((tableEventOnRecord) => {
+    const eventResource = {};
+    eventOnFields.forEach((field, columnIndex) => {
+      eventResource[field] = tableEventOnRecord[columnIndex];
+    });
+
+    eventResources.push(eventResource);
+  });
+
+  startLists.forEach((startList) => {
+    eventResources.push(startList);
+  });
+
+  return eventResources;
+}
