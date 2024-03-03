@@ -25,11 +25,13 @@
 /**
  * Creates the HTML code to display the live results tabs.
  *
+ * @param tableLiveResults the given live results tabular data
+ *
  * @returns the HTML code to display the live results tabs
  */
-function createLiveResultsHtml() {
+function createLiveResultsHtml(tableLiveResults) {
+  const liveRaces = getLiveRaces(tableLiveResults);
   const iFrames = getIframes();
-  const liveRaces = getLiveRaces();
 
   let html = '<h2>Resultados Provisórios</h2>' + '\n';
   html += '<span class="tag is-warning is-medium">Fase Experimental</span>' + '\n';

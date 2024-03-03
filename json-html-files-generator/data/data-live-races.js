@@ -23,19 +23,14 @@
  */
 
 /**
- * Gets the data of the live results races
+ * Gets the data for the races with live results.
  *
- * @returns the data of the live results races
+ * @param tableLiveResults the given live results tabular data
+ *
+ * @returns the data for the races with live results
  */
-function getLiveRaces() {
-  const tableLiveResultsData = SpreadsheetApp.getActive()
-    .getRangeByName('TableLiveResults')
-    .getDisplayValues()
-    .filter((record) => {
-      return record[0];
-    });
-
-  const liveResultsDataFields = tableLiveResultsData.shift();
+function getLiveRaces(tableLiveResults) {
+  tableLiveResultsData.shift();
 
   const liveRaces = [];
   tableLiveResultsData.map((tableLliveResultsRecord) => {

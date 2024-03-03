@@ -23,18 +23,19 @@
  */
 
 /**
- * Creates a string with the HTML code to display, on the EventON page of the Event specified on the main sheet
- * of the spreadsheet, the required files.
+ * Creates a string with the HTML code to display the required resources list on the EventON page
+ * of the Event specified on the "Main" sheet of the associated Google Sheet.
  *
- * @param eventYear the event's year
- * @param databaseSheetId the Google Sheets file ID where the Event table is stored
- * @param eventId the event's ID
- * @param eventReference the event's reference
+ * @param eventYear the given event's year
+ * @param databaseSheetId the given Google Sheets ID where the Event table is stored
+ * @param eventId the given event's ID
+ * @param eventReference the given event's reference
+ * @param tableEventOn the given EventON tabular data
  *
- * @returns the string with the HTML code to display the results files list of the required Event
+ * @returns the string with the HTML code to display the required resources list on the given event EventON page
  */
-function createEventOnResourcesListHtml(eventYear, databaseSheetId, eventId, eventReference) {
-  const eventOnData = getEventEventOnData(eventYear, databaseSheetId, eventId, eventReference);
+function createEventOnResourcesListHtml(eventYear, databaseSheetId, eventId, eventReference, tableEventOn) {
+  const eventOnData = getEventEventOnData(eventYear, databaseSheetId, eventId, eventReference, tableEventOn);
 
   let html = '<div class="documents-list">' + '\n';
 
@@ -59,11 +60,11 @@ function createEventOnResourcesListHtml(eventYear, databaseSheetId, eventId, eve
 }
 
 /**
- * Gets the HTML code to display the icon for the link of the given EventON resource
+ * Gets the HTML code to display the icon for the link of the given EventON resource link type
  *
  * @param linkType the given link type
  *
- * @returns the HTML code to display the icon for the link of the given EventON resource
+ * @returns the HTML code to display the icon for the link of the given EventON resource link type
  */
 function getFontAwsomeIconHtmlCode(linkType) {
   let html = '';

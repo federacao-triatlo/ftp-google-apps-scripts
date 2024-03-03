@@ -25,16 +25,16 @@
 const FILES_API_BASE_URL = 'https://api-files.federacao-triatlo.pt/';
 
 /**
- * Gets the data of the EventON files list
+ * Gets the data of the EventON resources list
  *
  * @param eventYear the event's year
  * @param databaseSheetId the Google Sheets file ID where the Event table is stored
  * @param eventId the event's ID
  * @param eventReference the event's reference
  *
- * @returns the data of the EventON files list
+ * @returns the data of the EventON resources list
  */
-function getEventEventOnData(eventYear, databaseSheetId, eventId, eventReference) {
+function getEventEventOnData(eventYear, databaseSheetId, eventId, eventReference, tableEventOn) {
   const tableEventFile = SpreadsheetApp.openById(databaseSheetId)
     .getRangeByName('TableEventFile')
     .getDisplayValues()
@@ -65,18 +65,12 @@ function getEventEventOnData(eventYear, databaseSheetId, eventId, eventReference
     return eventResource.linkType !== 'START_LIST';
   });
 
-  const tableEventOn = SpreadsheetApp.getActive()
-    .getRangeByName('TableEventOn')
-    .getDisplayValues()
-    .filter((record) => {
-      return record[0];
-    });
   const eventOnFields = tableEventOn.shift();
 
-  tableEventOn.forEach((tableEventOnRecord) => {
+  tableEventOn.forEach((record) => {
     const eventResource = {};
     eventOnFields.forEach((field, columnIndex) => {
-      eventResource[field] = tableEventOnRecord[columnIndex];
+      eventResource[field] = record[columnIndex];
     });
 
     eventResources.push(eventResource);

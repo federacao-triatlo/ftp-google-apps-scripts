@@ -24,13 +24,13 @@
 
 /**
  * Saves a file, in the user's Google Drive root folder, with the HTML code that lists all the results files
- * of the Event specified on the main sheet of the spreadsheet.
+ * for the Event specified on the "Main" sheet of the associated Google Sheet.
  */
 function saveEventResultsFilesListHtmlFile() {
-  const eventYear = SpreadsheetApp.getActive().getRangeByName('ValueEventYear').getDisplayValues()[0][0];
-  const databaseSheetId = SpreadsheetApp.getActive().getRangeByName('ValueDataBaseSheetId').getDisplayValues()[0][0];
-  const eventId = SpreadsheetApp.getActive().getRangeByName('ValueEventId').getDisplayValues()[0][0];
-  const eventReference = SpreadsheetApp.getActive().getRangeByName('ValueEventReference').getDisplayValues()[0][0];
+  const eventYear = getSelectedEventYear();
+  const databaseSheetId = getSelectedYearDatabaseGoogleSheetId();
+  const eventId = getSelectedEventId();
+  const eventReference = getSelectedEventReference();
 
   const html = createEventFilesListHtml(eventYear, databaseSheetId, eventId, eventReference);
   const fileName = eventReference + '.html';
@@ -40,14 +40,12 @@ function saveEventResultsFilesListHtmlFile() {
 
 /**
  * Saves a file, in the user's Google Drive root folder, with the HTML code that displays the race results
- * of the specified race reference, stored in the specified range name of the Google Sheets file with
- * the specified ID. The race reference, the range name and the Google Sheets file's id are specified on the main
- * sheet of the spreadsheet.
+ * of the Race specified on the "Main" sheet of the associated Google Sheet.
  */
 function saveResultsTableHtmlFile() {
-  const resultsSheetId = SpreadsheetApp.getActive().getRangeByName('ValueResultsSheetId').getDisplayValues()[0][0];
-  const resultsRangeName = SpreadsheetApp.getActive().getRangeByName('ValueResultsRangeName').getDisplayValues()[0][0];
-  const raceReference = SpreadsheetApp.getActive().getRangeByName('ValueRaceReference').getDisplayValues()[0][0];
+  const raceReference = getSelectedRaceReference();
+  const resultsSheetId = getSelectedResultsGoogleSheetId();
+  const resultsRangeName = getSelectedRaceResultsRangeName();
 
   const html = createResultsTableHtml(resultsSheetId, resultsRangeName);
   const fileName = raceReference + '.html';
@@ -56,13 +54,15 @@ function saveResultsTableHtmlFile() {
 }
 
 /**
- * Saves a file, in the user's Google Drive root folder, with the HTML code that displays the live results of the
- * Event specified on the main sheet of the spreadsheet and using the data stored on TableLiveResults range.
+ * Saves a file, in the user's Google Drive root folder, with the HTML code that displays
+ * the live results of the Event specified on the "Main" sheet of the associated Google Sheet
+ * and using the data stored on TableLiveResults range.
  */
 function saveLiveResultsHtmlFile() {
-  const eventReference = SpreadsheetApp.getActive().getRangeByName('ValueEventReference').getDisplayValues()[0][0];
+  const tableLiveResults = getLiveRacesTable();
+  const eventReference = getSelectedEventReference();
 
-  const html = createLiveResultsHtml();
+  const html = createLiveResultsHtml(tableLiveResults);
   const fileName = eventReference + '-LIVE.html';
 
   DriveApp.createFile(fileName, html, MimeType.HTML);
@@ -73,12 +73,13 @@ function saveLiveResultsHtmlFile() {
  * on the EventON page of the Event specified on the main sheet of the spreadsheet.
  */
 function saveEventOnResourcesListHtmlFile() {
-  const eventYear = SpreadsheetApp.getActive().getRangeByName('ValueEventYear').getDisplayValues()[0][0];
-  const databaseSheetId = SpreadsheetApp.getActive().getRangeByName('ValueDataBaseSheetId').getDisplayValues()[0][0];
-  const eventId = SpreadsheetApp.getActive().getRangeByName('ValueEventId').getDisplayValues()[0][0];
-  const eventReference = SpreadsheetApp.getActive().getRangeByName('ValueEventReference').getDisplayValues()[0][0];
+  const eventYear = getSelectedEventYear();
+  const databaseSheetId = getSelectedYearDatabaseGoogleSheetId();
+  const eventId = getSelectedEventId();
+  const eventReference = getSelectedEventReference();
+  const tableEventOn = getEventOnTable();
 
-  const html = createEventOnResourcesListHtml(eventYear, databaseSheetId, eventId, eventReference);
+  const html = createEventOnResourcesListHtml(eventYear, databaseSheetId, eventId, eventReference, tableEventOn);
   const fileName = eventReference + '-EventON.html';
 
   DriveApp.createFile(fileName, html, MimeType.HTML);
