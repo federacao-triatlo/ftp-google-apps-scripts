@@ -23,24 +23,25 @@
  */
 
 /**
- * Creates a string with the HTML code to display the results files list of the Event that took place in the given year,
- * stored in the Google Sheets file with the given ID, that has the given event ID and the given event reference.
+ * Creates a string with the HTML code to display the results files list for the given Event.
  *
- * @param eventYear the event's year
- * @param databaseSheetId the Google Sheets file ID where the Event table is stored
+ * @param eventYear the given event's year
+ * @param databaseSheetId the given Google Sheets ID where the Event table is stored
  * @param eventId the event's ID
  * @param eventReference the event's reference
- * @returns the string with the HTML code to display the results files list of the required Event
+ *
+ * @returns the string with the HTML code to display the results files list for the given Event
  */
-function createEventFilesListHtml(eventYear, databaseSheetId, eventId, eventReference) {
-  const resultsFiles = getResultsFilesByEventId(databaseSheetId, eventId).filter((file) => {
-    return file.active == 'TRUE';
-  });
-  resultsFiles.sort((fileA, fileB) => {
-    return fileA.displayOrder - fileB.displayOrder;
-  });
+function createEventResultsFilesListHtml(eventYear, databaseSheetId, eventId, eventReference) {
+  const resultsFiles = getResultsFilesByEventId(databaseSheetId, eventId)
+    .filter((file) => {
+      return file.active == 'TRUE';
+    })
+    .sort((fileA, fileB) => {
+      return fileA.displayOrder - fileB.displayOrder;
+    });
 
-  const fileBaseUrl = 'https://api-files.federacao-triatlo.pt/' + eventYear + '/events/' + eventReference + '/';
+  const fileBaseUrl = FILES_API_BASE_URL + eventYear + '/events/' + eventReference + '/';
 
   let html = '<race-results event-reference="' + eventReference + '"></race-results>' + '\n';
   html = html + '<div class="results-files">' + '\n';

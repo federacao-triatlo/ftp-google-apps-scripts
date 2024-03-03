@@ -32,7 +32,7 @@ function saveEventResultsFilesListHtmlFile() {
   const eventId = getSelectedEventId();
   const eventReference = getSelectedEventReference();
 
-  const html = createEventFilesListHtml(eventYear, databaseSheetId, eventId, eventReference);
+  const html = createEventResultsFilesListHtml(eventYear, databaseSheetId, eventId, eventReference);
   const fileName = eventReference + '.html';
 
   DriveApp.createFile(fileName, html, MimeType.HTML);

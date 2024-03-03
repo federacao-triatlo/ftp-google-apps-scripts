@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-const FILES_API_BASE_URL = 'https://api-files.federacao-triatlo.pt/';
-
 /**
  * Gets the data of the EventON resources list
  *
