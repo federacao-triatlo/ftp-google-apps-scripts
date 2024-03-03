@@ -23,13 +23,6 @@
  */
 
 /**
- * Creates a JSON string with the event's list of the season (year) specified on the main sheet of the spreadsheet.
- */
-function createEventsJsonByDatabaseSheetId(databaseSheetId) {
-  return JSON.stringify(getEventsByDatabaseSheetId(databaseSheetId));
-}
-
-/**
  * Creates a JSON string with the event with the given event ID stored in the Google Sheets file with the given ID
  *
  * @param databaseSheetId the Google Sheets file ID where the Event table is stored
