@@ -27,7 +27,7 @@
  * on the main sheet of the spreadsheet.
  */
 function saveEventsListJsonFile() {
-  const databaseSheetId = SpreadsheetApp.getActive().getRangeByName('CellDataBaseSheetId').getDisplayValues()[0][0];
+  const databaseSheetId = SpreadsheetApp.getActive().getRangeByName('ValueDataBaseSheetId').getDisplayValues()[0][0];
 
   const eventsJsonString = createEventsJsonByDatabaseSheetId(databaseSheetId);
   const fileName = 'events.json';
@@ -40,9 +40,9 @@ function saveEventsListJsonFile() {
  * of the spreadsheet.
  */
 function saveEventJsonFile() {
-  const databaseSheetId = SpreadsheetApp.getActive().getRangeByName('CellDataBaseSheetId').getDisplayValues()[0][0];
-  const eventId = SpreadsheetApp.getActive().getRangeByName('CellEventId').getDisplayValues()[0][0];
-  const eventReference = SpreadsheetApp.getActive().getRangeByName('CellEventReference').getDisplayValues()[0][0];
+  const databaseSheetId = SpreadsheetApp.getActive().getRangeByName('ValueDataBaseSheetId').getDisplayValues()[0][0];
+  const eventId = SpreadsheetApp.getActive().getRangeByName('ValueEventId').getDisplayValues()[0][0];
+  const eventReference = SpreadsheetApp.getActive().getRangeByName('ValueEventReference').getDisplayValues()[0][0];
 
   const eventJsonString = createEventJsonByEventId(databaseSheetId, eventId);
   const fileName = eventReference + '.json';

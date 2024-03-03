@@ -27,10 +27,10 @@
  * of the Event specified on the main sheet of the spreadsheet.
  */
 function saveEventResultsFilesListHtmlFile() {
-  const eventYear = SpreadsheetApp.getActive().getRangeByName('CellEventYear').getDisplayValues()[0][0];
-  const databaseSheetId = SpreadsheetApp.getActive().getRangeByName('CellDataBaseSheetId').getDisplayValues()[0][0];
-  const eventId = SpreadsheetApp.getActive().getRangeByName('CellEventId').getDisplayValues()[0][0];
-  const eventReference = SpreadsheetApp.getActive().getRangeByName('CellEventReference').getDisplayValues()[0][0];
+  const eventYear = SpreadsheetApp.getActive().getRangeByName('ValueEventYear').getDisplayValues()[0][0];
+  const databaseSheetId = SpreadsheetApp.getActive().getRangeByName('ValueDataBaseSheetId').getDisplayValues()[0][0];
+  const eventId = SpreadsheetApp.getActive().getRangeByName('ValueEventId').getDisplayValues()[0][0];
+  const eventReference = SpreadsheetApp.getActive().getRangeByName('ValueEventReference').getDisplayValues()[0][0];
 
   const html = createEventFilesListHtml(eventYear, databaseSheetId, eventId, eventReference);
   const fileName = eventReference + '.html';
@@ -45,9 +45,9 @@ function saveEventResultsFilesListHtmlFile() {
  * sheet of the spreadsheet.
  */
 function saveResultsTableHtmlFile() {
-  const resultsSheetId = SpreadsheetApp.getActive().getRangeByName('CellResultsSheetId').getDisplayValues()[0][0];
-  const resultsRangeName = SpreadsheetApp.getActive().getRangeByName('CellResultsRangeName').getDisplayValues()[0][0];
-  const raceReference = SpreadsheetApp.getActive().getRangeByName('CellRaceReference').getDisplayValues()[0][0];
+  const resultsSheetId = SpreadsheetApp.getActive().getRangeByName('ValueResultsSheetId').getDisplayValues()[0][0];
+  const resultsRangeName = SpreadsheetApp.getActive().getRangeByName('ValueResultsRangeName').getDisplayValues()[0][0];
+  const raceReference = SpreadsheetApp.getActive().getRangeByName('ValueRaceReference').getDisplayValues()[0][0];
 
   const html = createResultsTableHtml(resultsSheetId, resultsRangeName);
   const fileName = raceReference + '.html';
@@ -63,7 +63,7 @@ function saveLiveResultsHtmlFile() {
   const eventReference = SpreadsheetApp.getActive().getRangeByName('ValueEventReference').getDisplayValues()[0][0];
 
   const html = createLiveResultsHtml();
-  const fileName = eventReference + '.html';
+  const fileName = eventReference + '-LIVE.html';
 
   DriveApp.createFile(fileName, html, MimeType.HTML);
 }

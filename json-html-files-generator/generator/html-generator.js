@@ -113,7 +113,7 @@ function createTableHeadHtml(data) {
   html += '\t\t\t' + '</tr>' + '\n';
   html += '\t\t' + '</thead>' + '\n';
 
-  return html;
+  return html.replace(/\t/gi, '\x20\x20');
 }
 
 /**

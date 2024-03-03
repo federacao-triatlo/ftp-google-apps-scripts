@@ -34,6 +34,7 @@ function getLiveRaces() {
     .filter((record) => {
       return record[0];
     });
+
   const liveResultsDataFields = tableLiveResultsData.shift();
 
   const liveRaces = [];
