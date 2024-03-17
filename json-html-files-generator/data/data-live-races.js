@@ -29,7 +29,7 @@
  *
  * @returns the data for the races with live results
  */
-function getLiveRaces(tableLiveResults) {
+function getLiveRaces(tableLiveResultsData) {
   tableLiveResultsData.shift();
 
   const liveRaces = [];
