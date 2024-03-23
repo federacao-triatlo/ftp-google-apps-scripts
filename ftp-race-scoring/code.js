@@ -34,17 +34,25 @@ function onOpen() {
 }
 
 /**
- * Check if importing timing records is allowed.
+ * Check if importing timing records is allowed and if there's an import date defined.
  *
- * If importing timing records is allowed, the function writeFiveWaypointsTrackData(~) will be called.
- * If it isn't allowed, a message is displayed stating that importing timing records is blocked.
+ * If importing timing records is allowed and the import date is defined, the function writeFiveWaypointsTrackData(~)
+ * will be called. If it isn't allowed, a message is displayed stating that importing timing records isn't possible.
  */
 function validateGetTime() {
   const importStatus = getSelectedImportStatus();
   const importDate = getSelectedImportDate();
 
   if (importStatus === 'PERMITIDO') {
-    writeFiveWaypointsTrackData(importDate);
+    if (importDate && importDate.length > 0) {
+      writeFiveWaypointsTrackData(importDate);
+    } else {
+      const alertMessage =
+        'Não está definida a data dos registo de tempo a importar!!\n' +
+        'Para prosseguir com a importação de registos de tempo, é necessário definir a data dos mesmos.';
+
+      SpreadsheetApp.getUi().alert(alertMessage);
+    }
   } else {
     const alertMessage =
       'A importação de registos de tempo está bloqueada!\n' +
